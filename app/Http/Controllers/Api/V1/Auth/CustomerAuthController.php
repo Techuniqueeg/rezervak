@@ -166,13 +166,14 @@ class CustomerAuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
+            'is_phone_verified' => '1',
         ]);
 
         $token = $user->createToken('RestaurantCustomerAuth')->accessToken;
 
         if($customer_verification && env('APP_MODE') !='demo')
         {
-            $otp = '1234';
+            $otp = rand(1000, 9999);
             DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
                 [
                 'token' => $otp,
